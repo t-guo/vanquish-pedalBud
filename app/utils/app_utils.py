@@ -39,4 +39,7 @@ def parse_numeric_env_vars(input_val):
 
 
 def most_common(lst):
-    return max(set(lst), key=lst.count)
+    if list:
+        return max(set(lst), key=lst.count)
+    else:
+        return "None"
