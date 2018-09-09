@@ -1,0 +1,10 @@
+# Flask setting
+DEBUG: True
+
+# Access tokens
+GMAP_API_KEY: ""
+BIKE_PATH_FILE: "database/bike_path.pkl"
+BIKE_COLLISION_FILE: "database/bike_collision.pkl"
+
+FB_ACCESS_TOKEN: ""
+FB_VERIFY_TOKEN: "this_is_so_secure"
