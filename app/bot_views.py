@@ -3,6 +3,7 @@ from app import app, bot, FB_VERIFY_TOKEN, GMAP_API_KEY, BIKE_PATH_FILE, BIKE_CO
 from app.utils.pedalbud_actions_helper import SaferWayBotActions
 from app.utils.google_map_client_helper import GoogleMapsRouteHelper
 import json
+import time
 
 
 message_templates = {
@@ -48,21 +49,34 @@ def receive_message():
                         message = x['message']['text']
                         if message.lower() == "done":
                             # Clear od
+                            saferway_bot.send_typing_on(recipient_id)
+
                             saferway_bot.add_location_info(recipient_id, "", "destination")
                             saferway_bot.add_location_info(recipient_id, "", "origin")
+                            time.sleep(1)
+
+                            saferway_bot.send_typing_off(recipient_id)
 
                             saferway_bot.end_service(recipient_id)
                         else:
+
+                            saferway_bot.send_typing_on(recipient_id)
+                            time.sleep(1)
+
                             if no_user_info(saferway_bot.sessions, recipient_id):
+                                saferway_bot.send_typing_off(recipient_id)
                                 saferway_bot.ask_destination_location(recipient_id)
 
                             elif no_destination(saferway_bot.sessions, recipient_id):
+                                saferway_bot.send_typing_off(recipient_id)
                                 saferway_bot.ask_destination_location(recipient_id)
 
                             elif no_origin(saferway_bot.sessions, recipient_id):
+                                saferway_bot.send_typing_off(recipient_id)
                                 saferway_bot.ask_current_location(recipient_id)
 
                             else:
+                                saferway_bot.send_typing_off(recipient_id)
                                 saferway_bot.ask_end_navigation(recipient_id)
 
                     elif x['message'].get('attachments'):
@@ -73,6 +87,8 @@ def receive_message():
                                     latlong = att['payload']['coordinates']
                                     current_location = str(latlong['lat']) + "," + str(latlong['long'])
 
+                                    saferway_bot.send_typing_on(recipient_id)
+
                                     if no_user_info(saferway_bot.sessions, recipient_id):
                                         saferway_bot.add_location_info(recipient_id, current_location, "destination")
                                         saferway_bot.add_location_info(recipient_id, "", "origin")
@@ -80,23 +96,27 @@ def receive_message():
                                     elif no_destination(saferway_bot.sessions, recipient_id):
                                         saferway_bot.add_location_info(recipient_id, current_location, "destination")
 
-                                    else:
+                                    elif no_origin(saferway_bot.sessions, recipient_id):
                                         saferway_bot.add_location_info(recipient_id, current_location, "origin")
 
-                                    if not no_destination(saferway_bot.sessions, recipient_id) and \
+                                    time.sleep(1)
+
+                                    if (not no_destination(saferway_bot.sessions, recipient_id)) and \
                                             no_origin(saferway_bot.sessions, recipient_id):
+
+                                        saferway_bot.send_typing_off(recipient_id)
 
                                         saferway_bot.ask_current_location(recipient_id)
 
-                                    elif not no_destination(saferway_bot.sessions, recipient_id) and \
-                                            not no_origin(saferway_bot.sessions, recipient_id):
-
-                                        saferway_bot.send_typing_on(recipient_id)
+                                    elif (not no_destination(saferway_bot.sessions, recipient_id)) and \
+                                            (not no_origin(saferway_bot.sessions, recipient_id)):
 
                                         routes, url = gmaps.get_routes(
                                             saferway_bot.sessions[recipient_id]["origin"],
                                             saferway_bot.sessions[recipient_id]["destination"]
                                         )
+
+                                        saferway_bot.send_typing_off(recipient_id)
 
                                         if len(routes) > 1:
                                             saferway_bot.bot.send_text_message(
@@ -120,8 +140,13 @@ def receive_message():
                 elif x.get('postback'):
                     if x['postback'].get('payload'):
                         if x['postback']['payload'] == "end_navigation":
+                            saferway_bot.send_typing_on(recipient_id)
+
                             saferway_bot.add_location_info(recipient_id, "", "destination")
                             saferway_bot.add_location_info(recipient_id, "", "origin")
+                            time.sleep(1)
+
+                            saferway_bot.send_typing_off(recipient_id)
 
                             saferway_bot.end_service(recipient_id)
 

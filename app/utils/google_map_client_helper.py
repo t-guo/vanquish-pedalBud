@@ -5,6 +5,7 @@ import urllib
 import pandas as pd
 import operator
 from app.utils.app_utils import most_common
+from collections import Counter
 
 
 class GoogleMapsRouteHelper(object):
@@ -61,7 +62,7 @@ class GoogleMapsRouteHelper(object):
     #
     #         list_of_streets.append(street_name)
     #
-    #     incident_street = most_common(list_of_streets)
+    #     incident_street = Counter(list_of_streets)
     #
     #     list_of_streets = []
     #
@@ -74,7 +75,7 @@ class GoogleMapsRouteHelper(object):
     #
     #         list_of_streets.append(street_name)
     #
-    #     hazard_street = most_common(list_of_streets)
+    #     hazard_street = Counter(list_of_streets)
     #
     #     return incident_street, hazard_street
 

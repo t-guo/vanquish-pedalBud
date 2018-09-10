@@ -18,7 +18,6 @@ class SaferWayBotActions(object):
         return 'Invalid verification token'
 
     def ask_destination_location(self, recipient_id):
-        self.send_typing_on(recipient_id)
 
         user_first_name = self.get_user_first_name(recipient_id)
 
@@ -36,7 +35,6 @@ class SaferWayBotActions(object):
         )
 
     def end_service(self, recipient_id):
-        self.send_typing_on(recipient_id)
 
         self.bot.send_text_message(
             recipient_id,
@@ -44,7 +42,6 @@ class SaferWayBotActions(object):
         )
 
     def ask_current_location(self, recipient_id):
-        self.send_typing_on(recipient_id)
 
         self.bot.send_raw(
             {
@@ -122,6 +119,9 @@ class SaferWayBotActions(object):
 
     def send_typing_on(self, recipient_id):
         return self.bot.send_action(recipient_id, "typing_on")
+
+    def send_typing_off(self, recipient_id):
+        return self.bot.send_action(recipient_id, "typing_off")
 
     def get_user_first_name(self, uid):
         user_info = requests.get(self.bot.graph_url + "/" + uid + "?access_token=" + self.bot.access_token).content
