@@ -75,8 +75,8 @@ class SaferWayBotActions(object):
             sub_text += item["total_distance"] + "km(" + str(int(item["bike_path_perc"])) + "% bikeway)" + " | " + \
                         item["total_duration"] + "min"
 
-            sub_text += "\nIncident(" + str(item["collision_counter"]+item["near_miss_counter"]) + ") - " + item["incident_street"]
-            sub_text += "\nHazard(" + str(item["hazard_counter"]) + ") - " + item["hazard_street"]
+            sub_text += "\nIncident (" + str(item["collision_counter"]+item["near_miss_counter"]) + ")" # - " + item["incident_street"]
+            sub_text += "\nHazard (" + str(item["hazard_counter"]) + ")"# - " + item["hazard_street"]
 
             if index == 0:
                 elements.append({

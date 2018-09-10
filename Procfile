@@ -1,0 +1,1 @@
+web: gunicorn run_bot:app --log-file=-

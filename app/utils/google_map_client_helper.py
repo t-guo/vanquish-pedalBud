@@ -49,34 +49,34 @@ class GoogleMapsRouteHelper(object):
 
         return ranked_routes, url
 
-    def get_street_info(self, list_incident, list_hazard):
-        list_of_streets = []
-
-        for lat, long in list_incident:
-            result = self.client.reverse_geocode(str(lat) + "," + str(long))
-            if result[0]["address_components"][1]["types"][0] == "route":
-                street_name = result[0]["address_components"][1]["short_name"]
-            else:
-                street_name = result[0]["address_components"][0]["short_name"]
-
-            list_of_streets.append(street_name)
-
-        incident_street = most_common(list_of_streets)
-
-        list_of_streets = []
-
-        for lat, long in list_hazard:
-            result = self.client.reverse_geocode(str(lat) + "," + str(long))
-            if result[0]["address_components"][1]["types"][0] == "route":
-                street_name = result[0]["address_components"][1]["short_name"]
-            else:
-                street_name = result[0]["address_components"][0]["short_name"]
-
-            list_of_streets.append(street_name)
-
-        hazard_street = most_common(list_of_streets)
-
-        return incident_street, hazard_street
+    # def get_street_info(self, list_incident, list_hazard):
+    #     list_of_streets = []
+    #
+    #     for lat, long in list_incident:
+    #         result = self.client.reverse_geocode(str(lat) + "," + str(long))
+    #         if result[0]["address_components"][1]["types"][0] == "route":
+    #             street_name = result[0]["address_components"][1]["short_name"]
+    #         else:
+    #             street_name = result[0]["address_components"][0]["short_name"]
+    #
+    #         list_of_streets.append(street_name)
+    #
+    #     incident_street = most_common(list_of_streets)
+    #
+    #     list_of_streets = []
+    #
+    #     for lat, long in list_hazard:
+    #         result = self.client.reverse_geocode(str(lat) + "," + str(long))
+    #         if result[0]["address_components"][1]["types"][0] == "route":
+    #             street_name = result[0]["address_components"][1]["short_name"]
+    #         else:
+    #             street_name = result[0]["address_components"][0]["short_name"]
+    #
+    #         list_of_streets.append(street_name)
+    #
+    #     hazard_street = most_common(list_of_streets)
+    #
+    #     return incident_street, hazard_street
 
     @staticmethod
     def polyline_to_points(encoded_polyline):

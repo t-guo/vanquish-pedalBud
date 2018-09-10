@@ -109,11 +109,11 @@ def receive_message():
                                                 "Found " + str(len(routes)) + " route, processing safety metrics..."
                                             )
 
-                                        for route in routes:
-                                            route["incident_street"], route["hazard_street"] = gmaps.get_street_info(
-                                                route["list_incidents"],
-                                                route["list_hazards"]
-                                            )
+                                        # for route in routes:
+                                        #     route["incident_street"], route["hazard_street"] = gmaps.get_street_info(
+                                        #         route["list_incidents"],
+                                        #         route["list_hazards"]
+                                        #     )
 
                                         saferway_bot.help_navigate(recipient_id, routes, url)
 
