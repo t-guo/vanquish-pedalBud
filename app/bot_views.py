@@ -3,7 +3,6 @@ from app import app, bot, FB_VERIFY_TOKEN, GMAP_API_KEY, BIKE_PATH_FILE, BIKE_CO
 from app.utils.pedalbud_actions_helper import SaferWayBotActions
 from app.utils.google_map_client_helper import GoogleMapsRouteHelper
 import json
-import time
 
 
 message_templates = {
@@ -41,27 +40,20 @@ def receive_message():
             for x in messaging:
                 recipient_id = x['sender']['id']
 
-                app.logger.info('Message received: {}'.format(x))
-                app.logger.info('Current sessions {}'.format(json.dumps(saferway_bot.sessions)))
-
                 if x.get('message'):
                     if x['message'].get('text'):
+                        app.logger.info('Text message received: {}'.format(x))
+                        app.logger.info('Current sessions {}'.format(json.dumps(saferway_bot.sessions)))
+
                         message = x['message']['text']
                         if message.lower() == "done":
                             # Clear od
-                            saferway_bot.send_typing_on(recipient_id)
 
                             saferway_bot.add_location_info(recipient_id, "", "destination")
                             saferway_bot.add_location_info(recipient_id, "", "origin")
-                            time.sleep(1)
-
-                            saferway_bot.send_typing_off(recipient_id)
 
                             saferway_bot.end_service(recipient_id)
                         else:
-
-                            saferway_bot.send_typing_on(recipient_id)
-                            time.sleep(1)
 
                             if no_user_info(saferway_bot.sessions, recipient_id):
                                 saferway_bot.send_typing_off(recipient_id)
@@ -84,10 +76,10 @@ def receive_message():
                             if att.get('payload'):
                                 if att['payload'].get('coordinates'):
 
+                                    app.logger.info('Location message received: {}'.format(x))
+
                                     latlong = att['payload']['coordinates']
                                     current_location = str(latlong['lat']) + "," + str(latlong['long'])
-
-                                    saferway_bot.send_typing_on(recipient_id)
 
                                     if no_user_info(saferway_bot.sessions, recipient_id):
                                         saferway_bot.add_location_info(recipient_id, current_location, "destination")
@@ -99,7 +91,7 @@ def receive_message():
                                     elif no_origin(saferway_bot.sessions, recipient_id):
                                         saferway_bot.add_location_info(recipient_id, current_location, "origin")
 
-                                    time.sleep(1)
+                                    app.logger.info('Current sessions {}'.format(json.dumps(saferway_bot.sessions)))
 
                                     if (not no_destination(saferway_bot.sessions, recipient_id)) and \
                                             no_origin(saferway_bot.sessions, recipient_id):
@@ -116,8 +108,6 @@ def receive_message():
                                             saferway_bot.sessions[recipient_id]["destination"]
                                         )
 
-                                        saferway_bot.send_typing_off(recipient_id)
-
                                         if len(routes) > 1:
                                             saferway_bot.bot.send_text_message(
                                                 recipient_id,
@@ -128,6 +118,8 @@ def receive_message():
                                                 recipient_id,
                                                 "Found " + str(len(routes)) + " route, processing safety metrics..."
                                             )
+
+                                        saferway_bot.send_typing_on(recipient_id)
 
                                         # for route in routes:
                                         #     route["incident_street"], route["hazard_street"] = gmaps.get_street_info(
@@ -140,13 +132,10 @@ def receive_message():
                 elif x.get('postback'):
                     if x['postback'].get('payload'):
                         if x['postback']['payload'] == "end_navigation":
-                            saferway_bot.send_typing_on(recipient_id)
-
+                            app.logger.info('Done postback message received: {}'.format(x))
                             saferway_bot.add_location_info(recipient_id, "", "destination")
                             saferway_bot.add_location_info(recipient_id, "", "origin")
-                            time.sleep(1)
-
-                            saferway_bot.send_typing_off(recipient_id)
+                            app.logger.info('Current sessions {}'.format(json.dumps(saferway_bot.sessions)))
 
                             saferway_bot.end_service(recipient_id)
 
